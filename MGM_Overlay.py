@@ -16,7 +16,7 @@ import re
 
 IMG_WIDTH         =640
 IMG_HEIGHT        =480
-FILTER_SIZE     =9
+FILTER_SIZE     =11
 FILTER_OFFS     =(int)(FILTER_SIZE/2)
 SECTIONS        =5
 SECTION_GRACE	=10

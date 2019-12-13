@@ -16,7 +16,7 @@ import re
 
 IMG_WIDTH         =640
 IMG_HEIGHT        =480
-FILTER_SIZE     =9
+FILTER_SIZE     =11
 FILTER_OFFS     =(int)(FILTER_SIZE/2)
 SECTIONS        =5
 SECTION_GRACE	=10
@@ -153,9 +153,9 @@ if __name__ == "__main__":
 		try:		
 			#print(count)
 			count = count +1
-			ret, framel = capl.read()
+			ret, framel = capr.read()
+			ret, framer = capl.read()
 			imagel = cv2.cvtColor(framel, cv2.COLOR_BGR2GRAY)
-			ret, framer = capr.read()
 			imager = cv2.cvtColor(framer, cv2.COLOR_BGR2GRAY)
 			rectified_left = cv2.remap (imagel, left_rmap0, left_rmap1, cv2.INTER_LINEAR)
 			rectified_right = cv2.remap (imager, right_rmap0, right_rmap1, cv2.INTER_LINEAR)
@@ -170,9 +170,10 @@ if __name__ == "__main__":
 			#median =  cv2.medianBlur(disp_median_buff,3)
 			#cv2.imshow('disparity',median)
 			np.copyto(filter_inp_buffer,disp_median_buff)
-			#cv2.imshow('disparity',disp_median_buff)
-			#cv2.imshow('disparity2',disp_im_buffer)
+			#cv2.imshow('disparity',imagel)
+			#cv2.imshow('disparity2',rectified_left)
 			#execute_octomap(str(Image_buf_phy_addr + 4*image_size + 4*SECTION_GRACE*IMG_WIDTH))
+			#jet_color = cv2.applyColorMap(filter_out_buffer*2,cv2.COLORMAP_JET)
 			cv2.imshow("filtered",filter_out_buffer)
 			cv2.waitKey(1)
 		except:
@@ -187,12 +188,12 @@ if __name__ == "__main__":
 	median_filter.write(CTRL_reg_offset,0b00000000)
 
 
-	cv2.imwrite('./output_images/raw_iml_buffer.png',buffer_left)
-	cv2.imwrite('./output_images/raw_imr_buffer.png',buffer_right)
+	cv2.imwrite('./output_images/raw_iml_buffer.png',imagel)
+	cv2.imwrite('./output_images/raw_imr_buffer.png',imager)
 	cv2.imwrite('./output_images/rec_iml_buffer.png',rectified_left)
 	cv2.imwrite('./output_images/rec_imr_buffer.png',rectified_right)
-	np.copyto(buffer_left,disp_median_buff)
-	cv2.imwrite('./output_images/disp_im_buffer.png',buffer_left)
+	np.copyto(imagel,filter_out_buffer)
+	cv2.imwrite('./output_images/disp_im_buffer.png',imagel)
 
 
 	capl.release()
